@@ -36,13 +36,15 @@ url_api = "https://api.github.com/repos/{}/{}/actions/artifacts?per_page={}&page
 url_str = url_api.format(owner, repo, jobs)
 
 try:
-  url = urlopen(url_str)
+  request = Request(url_str)
+  request.add_header("Authorization", "Bearer " + token)
+  response = urlopen(request)
 except:
   print("Failed to open url")
   sys.exit(1)
 
 try:
-  data = json.loads(url.read().decode())
+  data = json.loads(response.read().decode())
 except ValueError:
   print("Invalid JSON data")
   sys.exit(1)
